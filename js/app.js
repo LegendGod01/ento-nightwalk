@@ -216,6 +216,64 @@ const flies = (function () {
   scene.add(pts); return { pts, seed, n };
 })();
 
+/* ── RAIN (camera-follow wrap) ─────────────────────────────── */
+const rain = (() => {
+  const n = RM ? 0 : 1200, pos = new Float32Array(n * 3), vel = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    pos[i*3] = (Math.random() - .5) * 90;
+    pos[i*3+1] = Math.random() * 40;
+    pos[i*3+2] = (Math.random() - .5) * 90;
+    vel[i] = 14 + Math.random() * 18;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const pts = new THREE.Points(g, new THREE.PointsMaterial({ color: 0x8fa3c7, size: .075, transparent: true, opacity: .5, blending: THREE.AdditiveBlending, depthWrite: false }));
+  scene.add(pts);
+  return { pts, pos, vel, n };
+})();
+
+/* ── DRIFTING MAPLE LEAVES (instanced, procedural texture) ─── */
+const leaves = (() => {
+  const n = RM ? 0 : 24;
+  const tex = canvasTex(64, (x, s) => {
+    x.clearRect(0, 0, s, s);
+    x.fillStyle = '#b8452e';
+    x.beginPath();
+    for (let i = 0; i < 5; i++) {
+      const a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+      x.lineTo(s/2 + Math.cos(a)*s*.42, s/2 + Math.sin(a)*s*.42);
+      const a2 = a + Math.PI/5;
+      x.lineTo(s/2 + Math.cos(a2)*s*.16, s/2 + Math.sin(a2)*s*.16);
+    }
+    x.closePath(); x.fill();
+  });
+  const geo = new THREE.PlaneGeometry(.32, .32);
+  const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false });
+  const inst = new THREE.InstancedMesh(geo, mat, n);
+  const data = [], m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e = new THREE.Euler(), v3 = new THREE.Vector3(), sc = new THREE.Vector3(1, 1, 1);
+  for (let i = 0; i < n; i++) {
+    data.push({ x: (Math.random()-.5)*40, y: 2 + Math.random()*16, z: 44 - Math.random()*95, sway: Math.random()*6.28, spin: .4 + Math.random()*1.4, fall: .5 + Math.random()*.9 });
+  }
+  scene.add(inst);
+  return { inst, data, n, m4, q, e, v3, sc };
+})();
+
+/* ── EMBERS (rising sparks) ────────────────────────────────── */
+const embers = (() => {
+  const n = RM ? 0 : 70, pos = new Float32Array(n*3), life = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    pos[i*3] = (Math.random()-.5)*20;
+    pos[i*3+1] = Math.random()*10;
+    pos[i*3+2] = 30 - Math.random()*80;
+    life[i] = Math.random();
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const pts = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xff8a3c, size: .11, transparent: true, opacity: .9, blending: THREE.AdditiveBlending, depthWrite: false }));
+  scene.add(pts);
+  return { pts, pos, life, n };
+})();
+
 /* ── SCROLL STATE ──────────────────────────────────────────── */
 const chapters = [...document.querySelectorAll('.chapter')].map(s => s.id);
 let scrollP = 0, scrollTarget = 0;
@@ -270,6 +328,41 @@ function tick() {
   }
   flies.pts.geometry.attributes.position.needsUpdate = true;
   moonGlow.material.opacity = .8 + Math.sin(t*.6)*.12;
+
+  /* ── KAGE-GRADE ATMOSPHERE ── */
+  if (rain.n) {
+    const p = rain.pos, cz = camera.position.z, cx = camera.position.x;
+    for (let i = 0; i < rain.n; i++) {
+      p[i*3+1] -= rain.vel[i] * 0.0165;
+      if (p[i*3+1] < -2) { p[i*3+1] = 32 + Math.random()*10; p[i*3] = cx + (Math.random()-.5)*46; p[i*3+2] = cz + (Math.random()-.5)*46; }
+    }
+    rain.pts.geometry.attributes.position.needsUpdate = true;
+  }
+  if (leaves.n) {
+    const now = performance.now() * .001;
+    for (let i = 0; i < leaves.n; i++) {
+      const d = leaves.data[i];
+      d.y -= d.fall * .015;
+      if (d.y < .1 || Math.abs(d.z - camera.position.z) > 70) { d.y = 8 + Math.random()*12; d.x = camera.position.x + (Math.random()-.5)*36; d.z = camera.position.z - 20 - Math.random()*50; }
+      leaves.e.set(now*d.spin + d.sway, now*.4 + d.sway, d.sway);
+      leaves.q.setFromEuler(leaves.e);
+      leaves.v3.set(d.x + Math.sin(now*.6 + d.sway)*1.7, d.y, d.z);
+      leaves.m4.compose(leaves.v3, leaves.q, leaves.sc);
+      leaves.inst.setMatrixAt(i, leaves.m4);
+    }
+    leaves.inst.instanceMatrix.needsUpdate = true;
+  }
+  if (embers.n) {
+    const p = embers.pos;
+    for (let i = 0; i < embers.n; i++) {
+      embers.life[i] += .009;
+      p[i*3+1] += .02;
+      p[i*3] += Math.sin(t*2 + i)*.005;
+      if (embers.life[i] > 1 || p[i*3+1] > 11) { embers.life[i] = 0; p[i*3+1] = .4+Math.random()*2; p[i*3] = (Math.random()-.5)*18; p[i*3+2] = camera.position.z - Math.random()*70; }
+    }
+    embers.pts.geometry.attributes.position.needsUpdate = true;
+  }
+
   renderer.render(scene, camera);
 }
 tick();
@@ -283,4 +376,40 @@ addEventListener('resize', () => {
 /* ── LOADER OFF ────────────────────────────────────────────── */
 addEventListener('load', () => setTimeout(() => document.getElementById('loader').classList.add('off'), 350));
 setTimeout(() => document.getElementById('loader').classList.add('off'), 2600);
+})();
+
+/* ── DOM: progress bar + custom cursor + word reveal ───────── */
+(function domFX() {
+  const prog = document.getElementById('progress');
+  const cursor = document.getElementById('cursor');
+  const fine = matchMedia('(pointer:fine)').matches;
+
+  /* headline words → spans (word-by-word reveal) */
+  document.querySelectorAll('h2, .mega').forEach(h => {
+    const parts = [];
+    h.childNodes.forEach(node => {
+      if (node.nodeType === 3 && node.textContent.trim()) {
+        node.textContent.split(/\s+/).filter(Boolean).forEach(w => parts.push(`<span class="w2">${w}</span>`));
+      } else if (node.nodeType === 1) {
+        parts.push(node.outerHTML);  /* .jp subtitle untouched */
+      }
+    });
+    h.innerHTML = parts.join(' ');
+  });
+
+  if (fine && cursor) {
+    addEventListener('pointermove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; }, { passive: true });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('pointerenter', () => cursor.classList.add('hover'));
+      el.addEventListener('pointerleave', () => cursor.classList.remove('hover'));
+    });
+  }
+
+  addEventListener('scroll', () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    if (prog && max > 0) prog.style.width = (scrollY / max * 100) + '%';
+  }, { passive: true });
+
+  /* reduced motion: grain off (CSS handles rest) */
+  if (RM) { const g = document.getElementById('grain'); if (g) g.style.display = 'none'; }
 })();
