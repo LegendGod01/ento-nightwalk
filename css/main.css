@@ -1,0 +1,94 @@
+/* ════════════════════════════════════════════════════════════
+   ENTO NIGHTWALK — main.css
+   © ENTOURAGED.SAM (LegendGod01). All rights reserved.
+   ════════════════════════════════════════════════════════════ */
+:root{
+  --ink:#05070a; --bone:#dfe7e0; --bone-dim:#aab4ad; --muted:#78837c;
+  --line:rgba(223,231,224,.13); --line-soft:rgba(223,231,224,.07);
+  --vermilion:#e0231c; --ember:#ff5a3c; --gold:#c9a24a;
+  --pad:clamp(20px,3.4vw,56px); --nav-h:84px;
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-out:cubic-bezier(.16,1,.3,1);
+  --jp:'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{background:var(--ink);color:var(--bone);font-family:'Onest',var(--jp),sans-serif;font-weight:300;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--vermilion);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+
+/* ═══ CANVAS STAGE ═══ */
+#stage{position:fixed;inset:0;z-index:0}
+#stage canvas{width:100%;height:100%;display:block}
+#veil{position:fixed;inset:0;z-index:1;pointer-events:none;background:
+  radial-gradient(120% 90% at 50% 10%, transparent 40%, rgba(5,7,10,.55) 100%),
+  linear-gradient(to top, rgba(5,7,10,.9) 0%, transparent 30%)}
+
+/* ═══ NAV ═══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:40;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:500;letter-spacing:.24em;font-size:.72rem;color:var(--bone)}
+.brand .mark{width:22px;height:22px;border-radius:50%;background:var(--vermilion);box-shadow:0 0 18px rgba(224,35,28,.55);position:relative}
+.brand .mark::before{content:"";position:absolute;left:2px;right:2px;top:4px;height:2px;background:var(--bone);opacity:.9}
+.brand .mark::after{content:"";position:absolute;left:5px;right:5px;top:10px;height:1.6px;background:var(--bone);opacity:.7}
+.nav-links{display:flex;gap:26px;font-size:.68rem;letter-spacing:.2em;color:var(--muted)}
+.nav-links a{transition:color .3s var(--ease)}
+.nav-links a:hover{color:var(--bone)}
+@media(max-width:720px){.nav-links{display:none}}
+
+/* ═══ CHAPTER RAIL ═══ */
+#chips{position:fixed;right:var(--pad);top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:14px}
+.chip{width:26px;height:2px;background:var(--line);border:none;cursor:pointer;position:relative;transition:all .5s var(--ease)}
+.chip.on{background:var(--vermilion);width:44px;box-shadow:0 0 12px rgba(224,35,28,.6)}
+.chip span{position:absolute;right:34px;top:50%;transform:translateY(-50%);font-size:.62rem;letter-spacing:.28em;color:var(--muted);opacity:0;white-space:nowrap;transition:opacity .4s}
+.chip:hover span{opacity:1}
+@media(max-width:720px){#chips{display:none}}
+
+/* ═══ CHAPTERS (scroll content) ═══ */
+main{position:relative;z-index:10}
+.chapter{min-height:100vh;display:flex;align-items:center;padding:0 var(--pad);position:relative}
+.copy{max-width:560px;opacity:0;transform:translateY(46px);transition:opacity 1.1s var(--ease-out),transform 1.1s var(--ease-out)}
+.copy.in{opacity:1;transform:none}
+.copy.right{margin-left:auto;text-align:right}
+.kicker{font-size:.64rem;letter-spacing:.5em;color:var(--vermilion);text-transform:uppercase;margin-bottom:22px;display:flex;align-items:center;gap:14px}
+.copy.right .kicker{justify-content:flex-end}
+.kicker::before{content:"";width:34px;height:1px;background:var(--vermilion);opacity:.7}
+h1,h2{font-weight:200;line-height:1.02;letter-spacing:-.01em}
+h1{font-size:clamp(3.2rem,10vw,8.2rem)}
+h2{font-size:clamp(2.2rem,5.6vw,4.6rem);margin-bottom:26px}
+h2 .jp{display:block;font-family:var(--jp);font-size:.38em;letter-spacing:.6em;color:var(--muted);margin-top:14px;font-weight:300}
+p{font-size:clamp(.95rem,1.4vw,1.08rem);line-height:1.85;color:var(--bone-dim);max-width:46ch}
+.copy.right p{margin-left:auto}
+.vr{color:var(--vermilion)}
+.hl{color:var(--gold)}
+
+/* ═══ HERO ═══ */
+#hero{flex-direction:column;justify-content:center;text-align:center}
+#hero .mega{font-size:clamp(4.6rem,17vw,15rem);font-weight:200;letter-spacing:.06em;line-height:.95;
+  background:linear-gradient(180deg,var(--bone) 20%,rgba(223,231,224,.4));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#hero .sub{margin-top:34px;font-size:.72rem;letter-spacing:.55em;color:var(--muted);text-transform:uppercase}
+#hero .scroll-cue{margin-top:9vh;display:flex;flex-direction:column;align-items:center;gap:12px;color:var(--muted);font-size:.62rem;letter-spacing:.4em}
+#hero .scroll-cue .line{width:1px;height:56px;background:linear-gradient(to bottom,var(--vermilion),transparent);animation:cue 2.2s var(--ease-io) infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.hero-fade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 50% 44%, transparent 30%, rgba(5,7,10,.5) 100%)}
+
+/* ═══ FINALE ═══ */
+#eternity{justify-content:center;text-align:center;flex-direction:column}
+#eternity .copy{max-width:760px}
+#eternity h2{font-size:clamp(2.8rem,7vw,6rem)}
+.cta{margin-top:44px;display:inline-flex;align-items:center;gap:14px;padding:16px 34px;border:1px solid var(--line);border-radius:100px;font-size:.72rem;letter-spacing:.34em;color:var(--bone);transition:all .45s var(--ease);background:rgba(5,7,10,.4);backdrop-filter:blur(10px)}
+.cta:hover{border-color:var(--vermilion);color:#fff;box-shadow:0 0 34px rgba(224,35,28,.35)}
+
+/* ═══ FOOTER ═══ */
+footer{position:relative;z-index:10;border-top:1px solid var(--line-soft);padding:34px var(--pad);display:flex;justify-content:space-between;align-items:center;font-size:.64rem;letter-spacing:.22em;color:var(--muted);background:rgba(5,7,10,.6);backdrop-filter:blur(8px)}
+footer b{color:var(--bone);font-weight:500}
+
+/* ═══ PRELOADER ═══ */
+#loader{position:fixed;inset:0;z-index:99;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .9s var(--ease),visibility .9s}
+#loader.off{opacity:0;visibility:hidden}
+#loader .rune{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);border-top-color:var(--vermilion);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loader .lbl{font-size:.62rem;letter-spacing:.5em;color:var(--muted)}
+
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .copy{opacity:1;transform:none}
+}
