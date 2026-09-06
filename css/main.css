@@ -107,3 +107,7 @@ footer b{color:var(--bone);font-weight:500}
 .w2{display:inline-block;opacity:0;transform:translateY(1.1em) rotate(2deg);transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)}
 .in .w2{opacity:1;transform:none}
 .in .w2:nth-child(1){transition-delay:.05s}.in .w2:nth-child(2){transition-delay:.13s}.in .w2:nth-child(3){transition-delay:.21s}.in .w2:nth-child(4){transition-delay:.29s}.in .w2:nth-child(5){transition-delay:.37s}.in .w2:nth-child(6){transition-delay:.45s}
+
+/* v3: afterlight + right-aligned copy */
+.copy.right{text-align:right;margin-left:auto;margin-right:6vw;align-items:flex-end}
+.copy.right .kicker{margin-left:auto}

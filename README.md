@@ -1,5 +1,19 @@
 # 🌙 ENTO NIGHTWALK
 
+## v3.0 — Kage-grade rebuild
+
+Full cinematic engine, original implementation:
+
+- **CatmullRom camera rig** — 6 authored keyframes (position + target + per-shot FOV), smoothed damp, mouse parallax drift, opening dolly-in
+- **GLSL systems** — rain (500 LineSegments streaks, GPU wrap around camera), leaf-fall sway shader, card sheen sweep shader
+- **16-texture procedural library** — stone, cedar planks, lacquer, shoji, roof tiles, sky dome, moon glow, wisp, cinematic stills (zero image assets)
+- **Builders** — torii gate, sanmon hall (shoji + posts + layered roof), 5-tier pagoda with gold spire, stone lanterns, sakura/pine trees, instanced stone path
+- **Atmosphere** — wisps (mist spirits), ground mist sheets, fireflies, embers, film grain, vignette
+- **6 chapters** with data-cam wiring, chapter rail, word-by-word headline reveals, custom cursor, scroll progress
+
+© ENTOURAGED.SAM (LegendGod01). Proprietary — see LICENSE.
+
+
 > A Kyoto mountain temple, rendered **live in WebGL** — a five-chapter night walk up the mountain.
 > Procedural sanmon gate, five-storey pagoda, flickering stone lanterns and a red moon. All in vanilla Three.js.
 

@@ -35,7 +35,7 @@
 
 <nav>
   <div class="brand"><span class="mark"></span>ENTO&nbsp;NIGHTWALK</div>
-  <div class="nav-links"><a href="#gate">THE GATE</a><a href="#pathways">PATHWAYS</a><a href="#lessons">LESSONS</a><a href="#eternity">ETERNITY</a></div>
+  <div class="nav-links"><a href="#gate">THE GATE</a><a href="#pathways">PATHWAYS</a><a href="#lessons">LESSONS</a><a href="#eternity">ETERNITY</a><a href="#afterlight">AFTERLIGHT</a></div>
 </nav>
 
 <div id="chips">
@@ -44,17 +44,18 @@
   <button class="chip" data-go="pathways"><span>PATHWAYS</span></button>
   <button class="chip" data-go="lessons"><span>LESSONS</span></button>
   <button class="chip" data-go="eternity"><span>ETERNITY</span></button>
+  <button class="chip" data-go="afterlight"><span>AFTERLIGHT</span></button>
 </div>
 
 <main>
-  <section class="chapter" id="hero">
+  <section class="chapter" id="hero" data-cam="0">
     <div class="hero-fade"></div>
     <h1 class="mega">NIGHTWALK</h1>
     <div class="sub">ENTOURAGED.SAM — A MOUNTAIN TEMPLE, LIVE IN WEBGL</div>
     <div class="scroll-cue"><span>WALK</span><div class="line"></div></div>
   </section>
 
-  <section class="chapter" id="gate">
+  <section class="chapter" id="gate" data-cam="1">
     <div class="copy">
       <div class="kicker">Chapter I</div>
       <h2>The Gate<span class="jp">山門</span></h2>
@@ -62,7 +63,7 @@
     </div>
   </section>
 
-  <section class="chapter" id="pathways">
+  <section class="chapter" id="pathways" data-cam="2">
     <div class="copy right">
       <div class="kicker">Chapter II</div>
       <h2>Pathways<span class="jp">参道</span></h2>
@@ -70,7 +71,7 @@
     </div>
   </section>
 
-  <section class="chapter" id="lessons">
+  <section class="chapter" id="lessons" data-cam="3">
     <div class="copy">
       <div class="kicker">Chapter III</div>
       <h2>Lessons<span class="jp">教え</span></h2>
@@ -78,12 +79,19 @@
     </div>
   </section>
 
-  <section class="chapter" id="eternity">
+  <section class="chapter" id="eternity" data-cam="4">
     <div class="copy">
       <div class="kicker">Chapter IV</div>
       <h2>Eternity<span class="jp">永遠</span></h2>
       <p>Five roofs against the sky, four hundred years of weather, one red moon watching it all. What you climbed for was never the summit — it was the quiet you carried up.</p>
       <a class="cta" href="#" onclick="return false">BEGIN YOUR WALK →</a>
+    </div>
+  </section>
+  <section class="chapter" id="afterlight" data-cam="5">
+    <div class="copy right">
+      <div class="kicker">Coda</div>
+      <h2>Afterlight<span class="jp">余韻</span></h2>
+      <p>The descent is quieter than the climb. Lantern light stays with you longer than you expect — <span class="hl">carry it down the mountain</span>.</p>
     </div>
   </section>
 </main>
